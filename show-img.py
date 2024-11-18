@@ -108,14 +108,16 @@ class ImageViewer:
                     pos = image['pos']
 
                     img_height, img_width = img.shape[:2]
-                    img_top_left = pos
-                    img_bottom_right = pos + np.array([img_width, img_height])
+                    # 计算图像左上角坐标，使图像中心对准 pos
+                    img_top_left = pos - np.array([img_width / 2, img_height / 2])
+                    img_bottom_right = pos + np.array([img_width / 2, img_height / 2])
 
                     # 判断图像是否在视图范围内
                     if (img_bottom_right[0] > top_left[0] and img_top_left[0] < bottom_right[0] and
                         img_bottom_right[1] > top_left[1] and img_top_left[1] < bottom_right[1]):
-                        view_pos = (pos - top_left) * self.zoom
-                        view_pos = view_pos.astype(int)
+
+                        # 计算在视图中的位置
+                        view_pos = ((img_top_left - top_left) * self.zoom).astype(int)
 
                         x1 = max(0, view_pos[0])
                         y1 = max(0, view_pos[1])
@@ -161,9 +163,9 @@ class ImageViewer:
 if __name__ == "__main__":
     viewer = ImageViewer()
     viewer.add_image("./imgs/03_0001.JPG", np.array([0, 0]))
-    viewer.add_image("./imgs/03_0002.JPG", np.array([-19.02805901*9, -98.53948212*9]), angle=45)
-    viewer.add_image("./imgs/03_0003.JPG", np.array([1000, -1000]), angle=-45)
-    viewer.add_image("./imgs/03_0004.JPG", np.array([-10000, -1000]))
+    viewer.add_image("./imgs/03_0002.JPG", np.array([0, 0]), angle=45)
+    # viewer.add_image("./imgs/03_0003.JPG", np.array([1000, -1000]), angle=-45)
+    # viewer.add_image("./imgs/03_0004.JPG", np.array([-10000, -1000]))
 
     # ============这里是一个加载文件夹中所有图像的例子================
     # image_dir = 'D:/Dataset/UAV_VisLoc_dataset/03/drone/'
